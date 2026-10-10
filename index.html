@@ -27,7 +27,7 @@ let expenses = defaults.map(x=>({name:x[0],amount:x[1]})), guests = [], tasks = 
 const $ = id => document.getElementById(id), money = n => Number(n||0).toLocaleString("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:2}), total = () => expenses.reduce((s,e)=>s+Number(e.amount||0),0);
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function toast(s){$("toast").textContent=s;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),2200)}
-function show(id){$("home").classList.toggle("hidden",id!=="home");["guest","org","entry"].forEach(x=>$(x).classList.toggle("hidden",x!==id));if(id==="home")publicRender();if(id==="org")orgRender();if(id==="entry")renderEntry();window.scrollTo({top:0,behavior:"smooth"})}
+function show(id){if(id==="entry"&&!currentUser){show("org");setAuthMessage("Connecte-toi pour accéder au contrôle des billets.");return}$("home").classList.toggle("hidden",id!=="home");["guest","org","entry"].forEach(x=>$(x).classList.toggle("hidden",x!==id));if(id==="home")publicRender();if(id==="org")orgRender();if(id==="entry")renderEntry();window.scrollTo({top:0,behavior:"smooth"})}
 function home(){show("home")}
 function expenseRows(id){$(id).innerHTML=expenses.map(e=>'<div class="row"><span>'+esc(e.name)+'</span><b class="amount">'+money(e.amount)+'</b></div>').join("")}
 function publicRender(){expenseRows("publicExpenses");expenseRows("guestExpenses");$("publicTotal").textContent=money(total());$("guestTotal").textContent=money(total());$("homeTotal").textContent=money(total())}
